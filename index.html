@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>منصة أستاذ علاء سعيد</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+:root{--bg:#f0f7ff;--bg2:#fff;--bg3:#e6f0fa;--panel:#fff;--txt:#1e293b;--muted:#64748b;--primary:#0ea5e9;--primary2:#38bdf8;--primary-dark:#0284c7;--success:#10b981;--danger:#ef4444;--warning:#f59e0b;--border:#e2e8f0;--radius:16px;--shadow:0 4px 20px rgba(14,165,233,0.1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);direction:rtl;overflow:hidden;-webkit-user-select:none;user-select:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+input,textarea,select{font-family:inherit;outline:none;font-size:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.7}}
+.topbar{height:60px;background:var(--panel);display:flex;align-items:center;padding:0 16px;gap:10px;border-bottom:1px solid var(--border);flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.03);z-index:50}
+.topbar h1{font-size:17px;flex:1;font-weight:800;color:var(--primary-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;background:var(--bg3);flex-shrink:0}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:90px}
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:68px;background:var(--panel);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,.03)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;color:var(--muted);font-weight:700;position:relative}
+.tab .ic{font-size:22px}
+.tab.active{color:var(--primary-dark)}
+.tab.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:30px;height:3px;background:var(--primary);border-radius:0 0 4px 4px}
+.btn{width:100%;padding:14px 20px;border-radius:12px;background:var(--primary);color:#fff;font-weight:800;font-size:15px;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(14,165,233,.3)}
+.btn:disabled{opacity:.5}
+.btn-ghost{background:var(--bg3);color:var(--txt);box-shadow:none}
+.btn-danger{background:var(--danger)}
+.btn-success{background:var(--success)}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:10px;width:auto}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700}
+.field input,.field textarea,.field select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--txt);font-size:14.5px}
+.field input:focus,.field textarea:focus{border-color:var(--primary);background:#fff}
+.err{color:var(--danger);font-size:12.5px;margin-top:6px;min-height:16px;text-align:center}
+.auth-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);overflow-y:auto}
+.auth-card{width:100%;max-width:440px;background:#fff;border-radius:20px;padding:32px 24px;box-shadow:0 10px 40px rgba(14,165,233,.15);border:1px solid var(--border);margin:20px 0}
+.auth-logo{text-align:center;margin-bottom:8px;font-size:60px;animation:float 3s ease-in-out infinite}
+.auth-title{text-align:center;font-size:22px;font-weight:900;color:var(--primary-dark);margin-bottom:4px}
+.auth-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px}
+.switch-auth{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.switch-auth button{color:var(--primary-dark);font-weight:700}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--txt);color:#fff;padding:12px 20px;border-radius:12px;z-index:99999;font-size:14px;font-weight:600;animation:fadeUp .3s;max-width:90vw;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.ok{background:var(--success)}
+.toast.err{background:var(--danger)}
+.empty{padding:60px 30px;text-align:center;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:14px}
+.empty .big{font-size:60px;opacity:.4}
+.empty .title{font-size:16px;font-weight:700;color:var(--txt)}
+.empty .sub{font-size:13px;max-width:280px;line-height:1.6}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+.loading{display:flex;align-items:center;justify-content:center;padding:60px 20px;gap:12px;color:var(--muted);flex-direction:column;min-height:100dvh}
+.chat-container{display:flex;flex-direction:column;height:calc(100dvh - 60px - 68px)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:82%;padding:12px 16px;border-radius:16px;font-size:14.5px;line-height:1.6;word-wrap:break-word;white-space:pre-wrap;animation:fadeUp .3s}
+.msg.user{align-self:flex-start;background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-end;background:#f1f5f9;color:var(--txt);border-bottom-left-radius:4px}
+.chat-input-wrap{padding:12px 16px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:22px;padding:11px 16px;color:var(--txt);font-size:14.5px;resize:none;max-height:120px;min-height:44px;line-height:1.4}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.chat-send:disabled{opacity:.4}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;padding:0 16px}
+.stat-card{background:#fff;padding:16px;border-radius:14px;border:1px solid var(--border);text-align:center;box-shadow:var(--shadow)}
+.stat-card .num{font-size:24px;font-weight:900;color:var(--primary-dark)}
+.stat-card .lbl{font-size:11px;color:var(--muted);font-weight:700}
+.user-item{display:flex;gap:12px;padding:12px;background:var(--bg3);border-radius:12px;margin:0 16px 10px;align-items:center}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary2));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0;font-size:14px}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.user-meta{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:9px;padding:2px 6px;border-radius:6px;font-weight:800}
+.badge-admin{background:var(--warning);color:#fff}
+.badge-banned{background:var(--danger);color:#fff}
+.badge-center{background:var(--primary);color:#fff}
+.grade-select{display:grid;gap:10px;margin-bottom:16px}
+.grade-option{padding:14px;background:var(--bg3);border:2px solid transparent;border-radius:12px;text-align:center;font-weight:800;font-size:15px;cursor:pointer;color:var(--txt)}
+.grade-option.selected{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-color:var(--primary-dark)}
+.class-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.class-option{padding:10px;background:var(--bg3);border:2px solid transparent;border-radius:10px;text-align:center;font-weight:700;font-size:13px;cursor:pointer;color:var(--txt)}
+.class-option.selected{background:var(--primary);color:#fff;border-color:var(--primary-dark)}
+.footer-credit{text-align:center;font-size:11px;color:var(--muted);padding:20px 0 0}
+.footer-credit b{color:var(--primary-dark);font-weight:800}
+.welcome-card{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:20px;padding:24px;margin:16px;box-shadow:0 8px 24px rgba(14,165,233,.3)}
+.welcome-card .hi{font-size:13px;opacity:.9}
+.welcome-card .name{font-size:22px;font-weight:900;margin:6px 0 10px}
+.welcome-card .info{display:flex;gap:8px;font-size:12px;flex-wrap:wrap}
+.welcome-card .info span{background:rgba(255,255,255,.2);padding:4px 10px;border-radius:8px}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 16px}
+.quick-action{background:#fff;padding:20px;border-radius:16px;text-align:center;border:1px solid var(--border);cursor:pointer;box-shadow:var(--shadow)}
+.quick-action .ic{font-size:36px;margin-bottom:8px}
+.quick-action .lbl{font-size:13px;font-weight:800;color:var(--txt)}
+.section-title{padding:16px;font-size:15px;font-weight:900;color:var(--primary-dark);display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:4px;height:20px;background:var(--primary);border-radius:2px}
+.list-item{display:flex;gap:12px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:14px;margin:0 16px 10px;align-items:center}
+.list-item .ic{font-size:28px;flex-shrink:0}
+.list-item .info{flex:1;min-width:0}
+.list-item .title{font-size:14px;font-weight:700;margin-bottom:2px}
+.list-item .meta{font-size:11px;color:var(--muted)}
+.lesson-card{background:#fff;border-radius:14px;border:1px solid var(--border);margin:0 16px 12px;overflow:hidden;box-shadow:var(--shadow)}
+.lesson-video{position:relative;width:100%;aspect-ratio:16/9;background:#000;cursor:pointer}
+.lesson-video .play-overlay{position:absolute;inset:0;background:linear-gradient(135deg,#0ea5e9,#0284c7);display:flex;align-items:center;justify-content:center;font-size:50px;color:#fff}
+.lesson-info{padding:14px}
+.lesson-info h4{font-size:15px;font-weight:800;margin-bottom:4px}
+.lesson-info p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.locked-overlay{position:absolute;inset:0;background:rgba(0,0,0,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:36px;text-align:center;padding:20px}
+.locked-overlay .lbl{font-size:13px;margin-top:8px;opacity:.9}
+.exam-option{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--bg3);border:2px solid transparent;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.exam-option.selected{background:#dbeafe;border-color:var(--primary)}
+.exam-option .letter{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.exam-option .txt{flex:1;font-size:14px}
+.kb-item{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;margin:0 16px 10px}
+.kb-item .kb-q{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--primary-dark)}
+.kb-item .kb-a{font-size:12px;color:var(--muted);line-height:1.6}
+.kb-item .kb-del{background:var(--danger);color:#fff;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;margin-top:8px}
+.admin-grade-tabs{display:flex;gap:8px;padding:0 16px 16px;overflow-x:auto}
+.admin-grade-tab{padding:10px 16px;background:#fff;border:2px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;color:var(--muted)}
+.admin-grade-tab.active{background:var(--primary);color:#fff;border-color:var(--primary-dark)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.modal-body{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;margin:20px 0}
+.code-box{background:var(--bg3);border:2px dashed var(--primary);border-radius:12px;padding:16px;text-align:center;font-size:24px;font-weight:900;color:var(--primary-dark);letter-spacing:4px;margin:10px 0}
+.qr-container{text-align:center;padding:20px;background:#fff;border-radius:12px;margin:10px 0}
+.qr-container canvas,.qr-container img{max-width:100%;height:auto}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading"><div class="spinner"></div><div>جاري التحميل...</div></div></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, set, push, update, remove, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7u2pJa9TClIiZIUUcNHD5UUZHgyWpFJk",
+  authDomain: "alas-saeed.firebaseapp.com",
+  databaseURL: "https://alas-saeed-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "alas-saeed",
+  storageBucket: "alas-saeed.firebasestorage.app",
+  messagingSenderId: "351811781161",
+  appId: "1:351811781161:web:9a117f6f8f45230a2b9238"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+const ADMIN_UID = "9Z7S1utaXlaFbTNsblxRrtGLbP03";
+const ADMIN_EMAIL = "owner121222@gmail.com";
+const APP_NAME = "أستاذ علاء سعيد";
+const DEV_NAME = "Developer_Yassin";
+const AI_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const AI_DEFAULT_MODEL = 'openai/gpt-oss-120b';
+
+const GRADES = [
+  { id: 'first', label: 'الصف الأول الإعدادي', short: 'أولى إعدادي', classes: 13 },
+  { id: 'second', label: 'الصف الثاني الإعدادي', short: 'تانية إعدادي', classes: 13 },
+  { id: 'third', label: 'الصف الثالث الإعدادي', short: 'تالتة إعدادي', classes: 0 }
+];
+
+let CURRENT_UID = null, IS_ADMIN = false, CURRENT_USER = null;
+let currentTab = 'home', listeners = [];
+let chatSessions = [], activeChatId = null;
+let AI_API_KEY = '', AI_MODEL = AI_DEFAULT_MODEL;
+let allLessons = {}, allExams = {}, allResults = {}, allBooks = {}, allKnowledge = {};
+let allCodes = {}, allVideoAccess = {}, allWatchProgress = {};
+let navStack = [];
+let adminGradeFilter = 'first';
+let adminKbGradeFilter = 'first';
+let currentVideoTimer = null, currentVideoStartTime = 0;
+let isCenterLogin = false;
+
+const $app = document.getElementById('app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&','<':'<','>':'>','"':'"',"'":'''}[c]));
+const initials = n => (n || '?').trim().charAt(0).toUpperCase();
+const gradeLabel = id => (GRADES.find(g => g.id === id)?.label || '');
+const gradeShort = id => (GRADES.find(g => g.id === id)?.short || '');
+const uid8 = () => Math.random().toString(36).substring(2, 10).toUpperCase();
+
+function toast(msg, type='info'){
+  document.querySelectorAll('.toast').forEach(e => e.remove());
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+function clearListeners(){ listeners.forEach(u => { try{ u(); }catch(e){} }); listeners = []; }
+function pushNav(state){ navStack.push(state); try { history.pushState({ state }, '', ''); } catch(e){} }
+function goBack(){ if(navStack.length > 1){ navStack.pop(); renderState(navStack[navStack.length-1]); } }
+window.addEventListener('popstate', () => {
+  if(navStack.length > 1){ navStack.pop(); renderState(navStack[navStack.length-1]); }
+  else { try { history.pushState({ state: navStack[0] || { screen: 'home' } }, '', ''); } catch(e){} }
+});
+function renderState(state){
+  if(!state) return;
+  if(state.screen === 'login') return renderLogin();
+  if(state.screen === 'register') return renderRegister();
+  if(state.screen === 'centerLogin') return renderCenterLogin();
+  if(state.screen === 'setup') return renderSetup(auth.currentUser);
+  if(state.screen === 'home'){ currentTab = state.tab || 'home'; return renderHome(); }
+  if(state.screen === 'lesson') return playLesson(state.lessonId);
+  if(state.screen === 'exam') return openExam(state.lessonId);
+  if(state.screen === 'results') return renderMyResults();
+  if(state.screen === 'trainAI') return renderTrainAI();
+}
+
+/* ========== المساعد الذكي ========== */
+const DEFAULT_KNOWLEDGE = {
+  first: [
+    { keywords: ['نهر النيل','النيل'], answer: 'نهر النيل أطول نهر في العالم (6650 كم)، ينبع من بحيرة فيكتوريا ويصب في البحر المتوسط.' },
+    { keywords: ['الدلتا'], answer: 'الدلتا المنطقة المثلثة التي يتفرع فيها النيل قبل المصب.' },
+    { keywords: ['موقع مصر'], answer: 'تقع مصر في الركن الشمالي الشرقي من أفريقيا.' }
+  ],
+  second: [
+    { keywords: ['الحضارة'], answer: 'الحضارة المصرية القديمة من أقدم الحضارات.' },
+    { keywords: ['التحنيط'], answer: 'التحنيط حفظ جسد المتوفى عند قدماء المصريين.' }
+  ],
+  third: [
+    { keywords: ['المواطنة'], answer: 'المواطنة الانتماء للوطن مع الحقوق والواجبات.' },
+    { keywords: ['الدستور'], answer: 'القانون الأعلى في الدولة.' }
+  ]
+};
+
+function splitIntoChunks(text, size = 3000){
+  const clean = String(text || '').replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  if(clean.length <= size) return [clean];
+  const chunks = []; let current = '';
+  const paragraphs = clean.split(/\n\n+/);
+  for(const p of paragraphs){
+    if((current + '\n\n' + p).length > size && current.length > 0){ chunks.push(current.trim()); current = p; }
+    else { current += (current ? '\n\n' : '') + p; }
+  }
+  if(current.trim()) chunks.push(current.trim());
+  const finalChunks = [];
+  for(const c of chunks){
+    if(c.length <= size * 1.5){ finalChunks.push(c); continue; }
+    for(let i = 0; i < c.length; i += size) finalChunks.push(c.slice(i, i + size));
+  }
+  return finalChunks;
+}
+
+function getSystemPrompt(grade, extraContext = ''){
+  const base = `أنت المساعد الذكي الخاص بالأستاذ علاء سعيد، منصة تعليمية لطلاب ${gradeShort(grade)} في منهج الدراسات الاجتماعية بمصر.
+قواعد مهمة:
+- لو سُئلت "ما اسمك؟" أو "مين انت؟" → "اسمي علاء سعيد".
+- لو سُئلت "مين مطورك؟" → "المطور بتاعي هو ياسين وائل".
+- متقولش إنك ChatGPT أو OpenAI.
+- أجب بالعربية بإيجاز ووضوح.`;
+  if(!extraContext) return base;
+  return base + `\n\n--- محتوى من المنهج ---\n${extraContext}\n--- نهاية المحتوى ---`;
+}
+
+async function callGroq(messages){
+  if(!AI_API_KEY) return null;
+  try {
+    const res = await fetch(AI_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${AI_API_KEY}` },
+      body: JSON.stringify({ model: AI_MODEL || AI_DEFAULT_MODEL, messages, temperature: 0.5 })
+    });
+    if(res.ok){ const data = await res.json(); return data?.choices?.[0]?.message?.content?.trim() || null; }
+  } catch(e){ console.warn('Groq failed:', e); }
+  return null;
+}
+
+async function askAI(userMessage){
+  const msg = userMessage.toLowerCase().trim();
+  const grade = CURRENT_USER?.grade || 'first';
+  const kbEntries = Object.values(allKnowledge).filter(k => k.grade === grade);
+  const queryWords = msg.split(/\s+/).filter(w => w.length > 2);
+  let bestQa = null, bestQaScore = 0;
+  for(const entry of kbEntries){
+    if(entry.type !== 'qa') continue;
+    const keywords = entry.question.toLowerCase().split(' ').filter(Boolean);
+    let score = 0;
+    for(const kw of keywords){ if(msg.includes(kw) && kw.length > 2) score += kw.length; }
+    if(score > bestQaScore){ bestQaScore = score; bestQa = entry; }
+  }
+  const fileChunks = kbEntries.filter(e => e.type === 'file');
+  const scoredChunks = fileChunks.map(chunk => {
+    const content = (chunk.content || '').toLowerCase();
+    let score = 0;
+    for(const w of queryWords){
+      const re = new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      score += (content.match(re) || []).length * w.length;
+    }
+    return { chunk, score };
+  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+
+  if(AI_API_KEY && scoredChunks.length > 0){
+    const topChunks = scoredChunks.slice(0, 3).map(x => x.chunk.content).join('\n\n---\n\n');
+    const reply = await callGroq([
+      { role:'system', content: getSystemPrompt(grade, topChunks) },
+      { role:'user', content: userMessage }
+    ]);
+    if(reply) return reply;
+  }
+  if(AI_API_KEY){
+    const reply = await callGroq([
+      { role:'system', content: getSystemPrompt(grade) },
+      { role:'user', content: userMessage }
+    ]);
+    if(reply) return reply;
+  }
+  let bestDef = null, bestDefScore = 0;
+  for(const item of (DEFAULT_KNOWLEDGE[grade] || [])){
+    for(const kw of item.keywords){
+      if(msg.includes(kw.toLowerCase()) && kw.length > bestDefScore){ bestDefScore = kw.length; bestDef = item; }
+    }
+  }
+  await new Promise(r => setTimeout(r, 300));
+  if(bestQa && bestQaScore >= 5) return bestQa.answer;
+  if(scoredChunks.length > 0) return scoredChunks[0].chunk.content.slice(0, 800);
+  if(bestDef) return bestDef.answer;
+  return `معلش مفهمتش قصدك. أنا مساعد مخصص لطلاب ${gradeShort(grade)}.`;
+}
+
+/* ========== المصادقة ========== */
+onAuthStateChanged(auth, async user => {
+  if(user){
+    CURRENT_UID = user.uid;
+    IS_ADMIN = (user.uid === ADMIN_UID) || (user.email === ADMIN_EMAIL);
+    const snap = await get(ref(db, `users/${user.uid}`));
+    if(snap.exists()){
+      CURRENT_USER = snap.val();
+      if(CURRENT_USER.banned && !IS_ADMIN) return renderBanned();
+      if(!CURRENT_USER.grade && !IS_ADMIN){ navStack = [{ screen: 'setup' }]; return renderSetup(user); }
+      loadData();
+      await loadChatSessions();
+      navStack = [{ screen: 'home', tab: 'home' }];
+      renderHome();
+    } else if(IS_ADMIN){
+      CURRENT_USER = {uid:user.uid, name:user.displayName || 'المطور', email:user.email, grade:'first', role:'admin'};
+      await set(ref(db, `users/${user.uid}`), {...CURRENT_USER, createdAt: Date.now(), banned: false});
+      loadData();
+      await loadChatSessions();
+      navStack = [{ screen: 'home', tab: 'home' }];
+      renderHome();
+    } else {
+      navStack = [{ screen: 'setup' }];
+      renderSetup(user);
+    }
+  } else {
+    CURRENT_UID = null; IS_ADMIN = false; CURRENT_USER = null;
+    clearListeners();
+    allLessons = {}; allExams = {}; allResults = {}; allBooks = {}; allKnowledge = {};
+    allCodes = {}; allVideoAccess = {}; allWatchProgress = {};
+    chatSessions = []; activeChatId = null; AI_API_KEY = ''; AI_MODEL = AI_DEFAULT_MODEL;
+    navStack = [{ screen: 'login' }];
+    renderLogin();
+  }
+});
+
+function loadData(){
+  listeners.push(onValue(ref(db, 'lessons'), s => { allLessons = s.val() || {}; if(['lessons','admin'].includes(currentTab)) renderHome(); }));
+  listeners.push(onValue(ref(db, 'exams'), s => { allExams = s.val() || {}; if(currentTab==='admin') renderHome(); }));
+  listeners.push(onValue(ref(db, 'results'), s => { allResults = s.val() || {}; if(currentTab==='admin') renderHome(); }));
+  listeners.push(onValue(ref(db, 'books'), s => { allBooks = s.val() || {}; if(['library','admin'].includes(currentTab)) renderHome(); }));
+  listeners.push(onValue(ref(db, 'knowledge'), s => { allKnowledge = s.val() || {}; }));
+  listeners.push(onValue(ref(db, 'settings/ai'), s => {
+    const v = s.val() || {};
+    AI_API_KEY = v.apiKey || '';
+    AI_MODEL = v.model || AI_DEFAULT_MODEL;
+  }));
+  listeners.push(onValue(ref(db, 'codes'), s => { allCodes = s.val() || {}; if(currentTab==='admin') renderHome(); }));
+  listeners.push(onValue(ref(db, 'videoAccess'), s => { allVideoAccess = s.val() || {}; }));
+  if(CURRENT_UID){
+    listeners.push(onValue(ref(db, `watchProgress/${CURRENT_UID}`), s => { allWatchProgress = s.val() || {}; }));
+  }
+}
+
+async function loadChatSessions(){
+  try {
+    const snap = await get(ref(db, `chats/${CURRENT_UID}`));
+    chatSessions = snap.exists() ? Object.values(snap.val()).sort((a,b)=>b.createdAt-a.createdAt) : [];
+    activeChatId = chatSessions[0]?.id || null;
+  } catch(e){ chatSessions = []; activeChatId = null; }
+}
+
+async function saveChatSession(session){
+  if(!CURRENT_UID) return;
+  try { await set(ref(db, `chats/${CURRENT_UID}/${session.id}`), session); } catch(e){}
+}
+
+async function deleteChatSession(id){
+  if(!CURRENT_UID) return;
+  try { await remove(ref(db, `chats/${CURRENT_UID}/${id}`)); } catch(e){}
+}
+
+function renderBanned(){
+  $app.innerHTML = `<div class="empty" style="min-height:100dvh;justify-content:center"><div class="big">🚫</div><div class="title">تم حظر حسابك</div></div>`;
+}
+
+/* ========== Login (مزدوج) ========== */
+function renderLogin(){
+  $app.innerHTML = `<div class="auth-wrap"><div class="auth-card">
+    <div class="auth-logo">📚</div>
+    <div class="auth-title">${esc(APP_NAME)}</div>
+    <div class="auth-sub">تسجيل الدخول</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="btn btn-sm ${!isCenterLogin?'':'btn-ghost'}" id="tabOnline" style="flex:1">🌐 طالب أونلاين</button>
+      <button class="btn btn-sm ${isCenterLogin?'':'btn-ghost'}" id="tabCenter" style="flex:1">🏫 طالب سنتر</button>
+    </div>
+    ${!isCenterLogin ? `
+      <div class="field"><label>البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@example.com"></div>
+      <div class="field"><label>كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••"></div>
+      <div class="err" id="fErr"></div>
+      <button class="btn" id="btnLogin">🚀 تسجيل الدخول</button>
+      <div style="text-align:center;margin:14px 0;color:var(--muted);font-size:12px">أو</div>
+      <button class="btn btn-ghost" id="btnRegister">✨ إنشاء حساب جديد</button>
+    ` : `
+      <div class="field"><label>كود الطالب</label><input id="fCode" placeholder="مثال: A1B2C3D4" style="text-align:center;font-size:18px;letter-spacing:3px;font-weight:800;text-transform:uppercase"></div>
+      <div class="field"><label>رقم الهاتف</label><input id="fPhone" type="tel" placeholder="01xxxxxxxxx"></div>
+      <div class="err" id="fErr"></div>
+      <button class="btn" id="btnCenterLogin">🏫 دخول طالب السنتر</button>
+      <div style="text-align:center;margin:14px 0;color:var(--muted);font-size:12px">أو</div>
+      <button class="btn btn-ghost" id="btnScanQR">📷 مسح QR Code</button>
+    `}
+    <div class="footer-credit">Developed by <b>${DEV_NAME}</b></div>
+  </div></div>`;
+  document.getElementById('tabOnline').onclick = () => { isCenterLogin = false; renderLogin(); };
+  document.getElementById('tabCenter').onclick = () => { isCenterLogin = true; renderLogin(); };
+  if(!isCenterLogin){
+    document.getElementById('btnLogin').onclick = async () => {
+      const email = document.getElementById('fEmail').value.trim();
+      const pass = document.getElementById('fPass').value;
+      if(!email || !pass){ document.getElementById('fErr').textContent = 'املأ كل الحقول'; return; }
+      const b = document.getElementById('btnLogin'); b.disabled = true; b.textContent = '...';
+      try { await signInWithEmailAndPassword(auth, email, pass); }
+      catch(e){ document.getElementById('fErr').textContent = 'بيانات خاطئة'; b.disabled = false; b.textContent = '🚀 تسجيل الدخول'; }
+    };
+    document.getElementById('btnRegister').onclick = () => { pushNav({ screen: 'register' }); renderRegister(); };
+  } else {
+    document.getElementById('btnCenterLogin').onclick = () => handleCenterLogin();
+    document.getElementById('btnScanQR').onclick = () => openQRScanner();
+  }
+}
+
+async function handleCenterLogin(){
+  const code = document.getElementById('fCode').value.trim().toUpperCase();
+  const phone = document.getElementById('fPhone').value.trim();
+  const errEl = document.getElementById('fErr');
+  if(!code || !phone){ errEl.textContent = 'املأ كل الحقول'; return; }
+  const btn = document.getElementById('btnCenterLogin');
+  btn.disabled = true; btn.textContent = '...';
+  try {
+    const snap = await get(ref(db, `codes/${code}`));
+    if(!snap.exists()){ errEl.textContent = 'كود غير موجود'; btn.disabled = false; btn.textContent = '🏫 دخول طالب السنتر'; return; }
+    const codeData = snap.val();
+    if(codeData.expiresAt && codeData.expiresAt < Date.now()){ errEl.textContent = 'انتهت صلاحية الكود'; btn.disabled = false; btn.textContent = '🏫 دخول طالب السنتر'; return; }
+    if(codeData.phone !== phone){ errEl.textContent = 'رقم الهاتف غير مطابق'; btn.disabled = false; btn.textContent = '🏫 دخول طالب السنتر'; return; }
+    const email = `center_${code.toLowerCase()}@alas-saeed.local`;
+    const pass = `center_${code}_${phone}`;
+    try { await signInWithEmailAndPassword(auth, email, pass); }
+    catch(e){
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(cred.user, { displayName: codeData.studentName });
+      await set(ref(db, `users/${cred.user.uid}`), {
+        uid: cred.user.uid, name: codeData.studentName, phone, email,
+        grade: codeData.grade, classNumber: codeData.classNumber || null,
+        role: 'center', centerCode: code, createdAt: Date.now(), banned: false
+      });
+    }
+    toast('أهلاً بك ' + codeData.studentName, 'ok');
+  } catch(e){
+    errEl.textContent = 'خطأ: ' + e.message;
+    btn.disabled = false; btn.textContent = '🏫 دخول طالب السنتر';
+  }
+}
+/* ========== QR Scanner (مصحح) ========== */
+function openQRScanner(){
+  // التحقق الأول من دعم المتصفح
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    toast('الكاميرا مش متاحة. لازم تفتح التطبيق من رابط HTTPS', 'err');
+    return;
+  }
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">📷 مسح QR Code</h3>
+    <div id="qr-reader" style="width:100%;border-radius:12px;overflow:hidden;min-height:200px;background:#000"></div>
+    <p id="qr-status" style="font-size:12px;color:var(--muted);text-align:center;margin-top:12px">جاري تشغيل الكاميرا...</p>
+    <button class="btn btn-ghost" style="margin-top:16px" id="qrCancel">إلغاء</button>
+  </div>`;
+  document.body.appendChild(modal);
+
+  const statusEl = modal.querySelector('#qr-status');
+  const qrScanner = new Html5Qrcode('qr-reader');
+  let isStopped = false;
+
+  const stopScanner = () => {
+    if(isStopped) return;
+    isStopped = true;
+    qrScanner.stop().catch(()=>{}).finally(() => {
+      try { modal.remove(); } catch(e){}
+    });
+  };
+
+  qrScanner.start(
+    { facingMode: 'environment' },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (text) => {
+      stopScanner();
+      const parts = text.split('|');
+      if(parts.length >= 2){
+        document.getElementById('fCode').value = parts[0].toUpperCase();
+        document.getElementById('fPhone').value = parts[1];
+        handleCenterLogin();
+      } else {
+        document.getElementById('fCode').value = text.toUpperCase();
+        toast('تم قراءة الكود. اكتب رقم هاتفك', 'ok');
+      }
+    },
+    () => {}
+  ).then(() => {
+    statusEl.textContent = 'وجّه الكاميرا نحو الكود';
+  }).catch(err => {
+    console.error('Camera error:', err);
+    const errStr = String(err);
+    let msg = 'فشل تشغيل الكاميرا. ';
+    if(errStr.includes('NotAllowedError') || errStr.includes('Permission')){
+      msg += 'صلاحية الكاميرا مرفوضة. افتح إعدادات المتصفح واسمح بالكاميرا.';
+    } else if(errStr.includes('NotFoundError')){
+      msg += 'مفيش كاميرا على الجهاز ده.';
+    } else if(errStr.includes('NotReadableError')){
+      msg += 'الكاميرا مستخدمة في تطبيق تاني. اقفل التطبيقات التانية وجرب.';
+    } else if(errStr.includes('secure context') || errStr.includes('https')){
+      msg += 'لازم تفتح التطبيق من رابط HTTPS عشان الكاميرا تشتغل.';
+    } else {
+      msg += errStr;
+    }
+    statusEl.textContent = msg;
+    statusEl.style.color = 'var(--danger)';
+    toast(msg, 'err');
+  });
+
+  modal.querySelector('#qrCancel').onclick = stopScanner;
+}
+
+/* ========== Register (أونلاين) ========== */
+function renderRegister(){
+  $app.innerHTML = `<div class="auth-wrap"><div class="auth-card">
+    <div class="auth-logo">📚</div>
+    <div class="auth-title">${esc(APP_NAME)}</div>
+    <div class="auth-sub">إنشاء حساب جديد</div>
+    <div class="field"><label>الاسم</label><input id="fName" placeholder="اسمك" maxlength="40"></div>
+    <div class="field"><label>البريد الإلكتروني</label><input id="fEmail" type="email"></div>
+    <div class="field"><label>كلمة المرور</label><input id="fPass" type="password" placeholder="6 أحرف على الأقل"></div>
+    <div class="err" id="fErr"></div>
+    <button class="btn" id="btnCreate">✨ إنشاء الحساب</button>
+    <div class="switch-auth"><button id="toLogin">لديك حساب؟ سجل الدخول</button></div>
+    <div class="footer-credit">Developed by <b>${DEV_NAME}</b></div>
+  </div></div>`;
+  document.getElementById('toLogin').onclick = goBack;
+  const $err = document.getElementById('fErr');
+  document.getElementById('btnCreate').onclick = async () => {
+    const name = document.getElementById('fName').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const pass = document.getElementById('fPass').value;
+    if(!name || !email || !pass){ $err.textContent = 'املأ كل الحقول'; return; }
+    if(pass.length < 6){ $err.textContent = 'كلمة المرور 6 أحرف على الأقل'; return; }
+    const b = document.getElementById('btnCreate'); b.disabled = true; b.textContent = '...';
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(cred.user, { displayName: name });
+      await set(ref(db, `users/${cred.user.uid}`), {
+        uid: cred.user.uid, name, email, role: 'online', createdAt: Date.now(), banned: false
+      });
+      toast('تم إنشاء الحساب 🎉', 'ok');
+    } catch(e){
+      $err.textContent = e.message.includes('email-already-in-use') ? 'البريد مستخدم' : 'حدث خطأ';
+      b.disabled = false; b.textContent = '✨ إنشاء الحساب';
+    }
+  };
+}
+
+/* ========== Setup ========== */
+function renderSetup(user){
+  let selectedGrade = null, selectedClass = null;
+  $app.innerHTML = `<div class="auth-wrap"><div class="auth-card">
+    <div class="auth-logo">👋</div>
+    <div class="auth-title">أهلاً ${esc(user.displayName || 'بك')}</div>
+    <div class="auth-sub">اختر صفك الدراسي</div>
+    <div class="grade-select" id="gradeSelect">
+      ${GRADES.map(g => `<div class="grade-option" data-grade="${g.id}">${g.label}</div>`).join('')}
+    </div>
+    <div id="classSection" class="hidden">
+      <div class="field"><label>اختر الفصل</label></div>
+      <div class="class-grid" id="classGrid"></div>
+    </div>
+    <button class="btn" id="btnSave" disabled>✅ تسجيل</button>
+  </div></div>`;
+  const btn = document.getElementById('btnSave');
+  document.querySelectorAll('.grade-option').forEach(el => {
+    el.onclick = () => {
+      selectedGrade = el.dataset.grade; selectedClass = null;
+      document.querySelectorAll('.grade-option').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+      const g = GRADES.find(x => x.id === selectedGrade);
+      const cs = document.getElementById('classSection');
+      const cg = document.getElementById('classGrid');
+      if(g.classes === 0){ cs.classList.add('hidden'); btn.disabled = false; }
+      else {
+        cs.classList.remove('hidden');
+        cg.innerHTML = Array.from({ length: g.classes }, (_, i) =>
+          `<div class="class-option" data-class="${i+1}">${i+1}</div>`
+        ).join('');
+        cg.querySelectorAll('.class-option').forEach(c => {
+          c.onclick = () => {
+            selectedClass = c.dataset.class;
+            cg.querySelectorAll('.class-option').forEach(x => x.classList.remove('selected'));
+            c.classList.add('selected'); btn.disabled = false;
+          };
+        });
+        btn.disabled = true;
+      }
+    };
+  });
+  btn.onclick = async () => {
+    if(!selectedGrade){ toast('اختر الصف', 'err'); return; }
+    const g = GRADES.find(x => x.id === selectedGrade);
+    if(g.classes > 0 && !selectedClass){ toast('اختر الفصل', 'err'); return; }
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      await update(ref(db, `users/${user.uid}`), {
+        grade: selectedGrade, classNumber: selectedClass || null, setupComplete: true
+      });
+      toast('تم التسجيل 🎉', 'ok');
+    } catch(e){
+      toast('فشل: ' + e.message, 'err');
+      btn.disabled = false; btn.textContent = '✅ تسجيل';
+    }
+  };
+}
+
+/* ========== Home ========== */
+function renderHome(){
+  const tabs = [
+    { id: 'home', ic: '🏠', label: 'الرئيسية' },
+    { id: 'lessons', ic: '🎥', label: 'الدروس' },
+    { id: 'library', ic: '📚', label: 'المكتبة' },
+    { id: 'chat', ic: '💬', label: 'المحادثة' }
+  ];
+  if(IS_ADMIN) tabs.push({ id: 'admin', ic: '⚙️', label: 'الإدارة' });
+
+  $app.innerHTML = `
+    <div class="topbar">
+      <div style="font-size:24px">📚</div>
+      <h1>${esc(APP_NAME)}</h1>
+      <button class="icon-btn" id="btnLogout">🚪</button>
+    </div>
+    <div class="page" id="mainPage"></div>
+    <div class="tabbar">
+      ${tabs.map(t => `<button class="tab ${currentTab===t.id?'active':''}" data-tab="${t.id}"><div class="ic">${t.ic}</div>${t.label}</button>`).join('')}
+    </div>`;
+  document.getElementById('btnLogout').onclick = async () => { if(confirm('خروج؟')) await signOut(auth); };
+  document.querySelectorAll('.tab').forEach(t => {
+    t.onclick = () => { currentTab = t.dataset.tab; navStack = [{ screen: 'home', tab: currentTab }]; renderHome(); };
+  });
+
+  if(currentTab === 'home') renderHomeTab();
+  else if(currentTab === 'lessons') renderLessonsTab();
+  else if(currentTab === 'library') renderLibraryTab();
+  else if(currentTab === 'chat') renderChatTab();
+  else if(currentTab === 'admin') renderAdminTab();
+}
+
+function renderHomeTab(){
+  const page = document.getElementById('mainPage');
+  const isAdminView = IS_ADMIN;
+  const isCenter = CURRENT_USER?.role === 'center';
+  const grade = isAdminView ? 'كل الصفوف (مدير)' : gradeLabel(CURRENT_USER?.grade);
+  const cls = !isAdminView && CURRENT_USER?.classNumber ? ` • ${CURRENT_USER.classNumber}` : '';
+  const lessonsCount = isAdminView
+    ? Object.keys(allLessons).length
+    : Object.values(allLessons).filter(l => l.grade === CURRENT_USER?.grade).length;
+
+  page.innerHTML = `
+    <div class="welcome-card">
+      <div class="hi">أهلاً بك،</div>
+      <div class="name">${esc(CURRENT_USER?.name || (isAdminView ? 'المطور' : 'طالب'))}</div>
+      <div class="info">
+        <span>📖 ${esc(grade)}${cls}</span>
+        ${isCenter ? '<span>🏫 طالب سنتر</span>' : ''}
+      </div>
+    </div>
+    <div class="quick-actions">
+      <div class="quick-action" id="qaLessons"><div class="ic">🎥</div><div class="lbl">الدروس (${lessonsCount})</div></div>
+      <div class="quick-action" id="qaLibrary"><div class="ic">📚</div><div class="lbl">المكتبة</div></div>
+      <div class="quick-action" id="qaChat"><div class="ic">💬</div><div class="lbl">اسأل المساعد</div></div>
+      <div class="quick-action" id="qaResults"><div class="ic">🏆</div><div class="lbl">${isAdminView ? 'نتايج الطلاب' : 'نتايجي'}</div></div>
+    </div>
+    <div class="footer-credit">Developed by <b>${DEV_NAME}</b></div>`;
+
+  document.getElementById('qaLessons').onclick = () => { currentTab = 'lessons'; navStack = [{ screen: 'home', tab: 'lessons' }]; renderHome(); };
+  document.getElementById('qaLibrary').onclick = () => { currentTab = 'library'; navStack = [{ screen: 'home', tab: 'library' }]; renderHome(); };
+  document.getElementById('qaChat').onclick = () => { currentTab = 'chat'; navStack = [{ screen: 'home', tab: 'chat' }]; renderHome(); };
+  document.getElementById('qaResults').onclick = () => {
+    if(IS_ADMIN) { currentTab = 'admin'; navStack = [{ screen: 'home', tab: 'admin' }]; renderHome(); }
+    else { pushNav({ screen: 'results' }); renderMyResults(); }
+  };
+}
+
+/* ========== Lessons + Access Control ========== */
+function checkVideoAccess(lessonId){
+  const lesson = allLessons[lessonId];
+  if(!lesson) return { allowed: false, reason: 'الدرس غير موجود' };
+  if(IS_ADMIN) return { allowed: true };
+  if(CURRENT_USER?.role === 'center') return { allowed: true };
+  if(!lesson.isPaid) return { allowed: true };
+  const access = allVideoAccess[`${CURRENT_UID}_${lessonId}`];
+  if(access){
+    if(access.expiresAt && access.expiresAt < Date.now()){
+      return { allowed: false, reason: 'انتهت صلاحية الوصول لهذا الفيديو', needCode: true };
+    }
+    return { allowed: true };
+  }
+  return { allowed: false, reason: 'هذا الفيديو مدفوع. ادخل الكود للوصول', needCode: true };
+}
+
+function isLessonUnlocked(idx, lessons){
+  if(IS_ADMIN) return true;
+  const lesson = lessons[idx];
+  if(!lesson) return false;
+  if(idx === 0) return true;
+  const prev = lessons[idx-1];
+  if(!prev) return true;
+  const prevHasExam = Object.values(allExams).some(e => e.lessonId === prev.id);
+  if(!prevHasExam) return true;
+  const myResults = Object.values(allResults).filter(r => r.studentId === CURRENT_UID && r.lessonId === prev.id);
+  const passedPrev = myResults.some(r => r.passed);
+  if(passedPrev) return true;
+  const watch = allWatchProgress[prev.id];
+  if(watch && watch.percent >= 90) return true;
+  return false;
+}
+
+function renderLessonsTab(){
+  const page = document.getElementById('mainPage');
+  if(!page) return;
+  const grade = CURRENT_USER?.grade;
+  const lessons = Object.values(allLessons)
+    .filter(l => l.grade === grade)
+    .sort((a,b) => String(a.order||'').localeCompare(String(b.order||''), 'ar'));
+  const myResults = Object.values(allResults).filter(r => r.studentId === CURRENT_UID);
+  const passedLessonIds = new Set(myResults.filter(r => r.passed).map(r => r.lessonId));
+
+  page.innerHTML = `
+    <div class="section-title">دروس ${esc(gradeLabel(grade))}</div>
+    ${lessons.length === 0 ? `<div class="empty"><div class="big">🎥</div><div class="title">لا توجد دروس بعد</div></div>`
+      : lessons.map((lesson, idx) => {
+        const unlocked = isLessonUnlocked(idx, lessons);
+        const access = checkVideoAccess(lesson.id);
+        const canWatch = unlocked && access.allowed;
+        const hasExam = Object.values(allExams).some(e => e.lessonId === lesson.id);
+        const passedThis = passedLessonIds.has(lesson.id);
+        const watchProgress = allWatchProgress[lesson.id]?.percent || 0;
+        const isPaid = lesson.isPaid;
+        return `
+          <div class="lesson-card">
+            <div class="lesson-video">
+              ${canWatch
+                ? `<div class="play-overlay" data-play="${lesson.id}">🎬</div>`
+                : !unlocked
+                  ? `<div class="locked-overlay">🔒<div class="lbl">اكمل الدرس السابق</div></div>`
+                  : `<div class="locked-overlay">💰<div class="lbl">ادخل الكود للوصول</div></div>`}
+            </div>
+            <div class="lesson-info">
+              <h4>${esc(lesson.title)} ${isPaid ? '💰' : ''}</h4>
+              <p style="font-size:11px;color:var(--primary-dark);font-weight:700;margin-bottom:6px">📌 ${esc(lesson.order || '')}</p>
+              <p>${esc(lesson.description || '')}</p>
+              ${watchProgress > 0 && watchProgress < 100 ? `<div style="font-size:11px;color:var(--warning);margin-bottom:6px">📺 شاهدت ${watchProgress}%</div>` : ''}
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                ${canWatch
+                  ? `<button class="btn btn-sm" style="flex:1" data-play="${lesson.id}">▶️ مشاهدة</button>`
+                  : !unlocked
+                    ? `<button class="btn btn-sm btn-ghost" disabled style="flex:1">🔒 مقفول</button>`
+                    : `<button class="btn btn-sm" style="flex:1" data-code="${lesson.id}">💰 ادخل الكود</button>`}
+                ${hasExam && canWatch ? `<button class="btn btn-sm ${passedThis?'btn-success':'btn-primary'}" style="flex:1" data-exam="${lesson.id}">${passedThis?'✅ الامتحان':'📝 امتحن'}</button>` : ''}
+              </div>
+            </div>
+          </div>`;
+      }).join('')}`;
+
+  page.querySelectorAll('[data-play]').forEach(el => {
+    el.onclick = () => { pushNav({ screen: 'lesson', lessonId: el.dataset.play }); playLesson(el.dataset.play); };
+  });
+  page.querySelectorAll('[data-exam]').forEach(el => {
+    el.onclick = () => { pushNav({ screen: 'exam', lessonId: el.dataset.exam }); openExam(el.dataset.exam); };
+  });
+  page.querySelectorAll('[data-code]').forEach(el => {
+    el.onclick = () => openVideoAccessModal(el.dataset.code);
+  });
+}
+
+/* ========== Video Access Modal ========== */
+function openVideoAccessModal(lessonId){
+  const lesson = allLessons[lessonId];
+  if(!lesson) return;
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">💰 فيديو مدفوع</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">${esc(lesson.title)}<br>ادخل الكود اللي اشتريته من المدرس</p>
+    <div class="field"><label>الكود</label><input id="accessCode" placeholder="مثال: V1D2A3" style="text-align:center;font-size:18px;letter-spacing:3px;font-weight:800;text-transform:uppercase"></div>
+    <div class="err" id="codeErr"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="codeCancel">إلغاء</button>
+      <button class="btn btn-success" id="codeSubmit">✅ تفعيل</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#codeCancel').onclick = () => modal.remove();
+  modal.querySelector('#codeSubmit').onclick = async () => {
+    const code = modal.querySelector('#accessCode').value.trim().toUpperCase();
+    if(!code){ modal.querySelector('#codeErr').textContent = 'اكتب الكود'; return; }
+    const btn = modal.querySelector('#codeSubmit'); btn.disabled = true; btn.textContent = '...';
+    try {
+      const snap = await get(ref(db, `videoCodes/${code}`));
+      if(!snap.exists()){
+        modal.querySelector('#codeErr').textContent = 'كود غير صحيح';
+        btn.disabled = false; btn.textContent = '✅ تفعيل';
+        return;
+      }
+      const codeData = snap.val();
+      if(codeData.lessonId !== lessonId){
+        modal.querySelector('#codeErr').textContent = 'الكود لا يخص هذا الفيديو';
+        btn.disabled = false; btn.textContent = '✅ تفعيل';
+        return;
+      }
+      if(codeData.expiresAt && codeData.expiresAt < Date.now()){
+        modal.querySelector('#codeErr').textContent = 'انتهت صلاحية الكود';
+        btn.disabled = false; btn.textContent = '✅ تفعيل';
+        return;
+      }
+      const usedDevices = codeData.usedDevices || [];
+      if(!usedDevices.includes(CURRENT_UID)){
+        if(usedDevices.length >= (codeData.maxDevices || 1)){
+          modal.querySelector('#codeErr').textContent = 'تم استخدام الكود على الحد الأقصى من الأجهزة';
+          btn.disabled = false; btn.textContent = '✅ تفعيل';
+          return;
+        }
+        await update(ref(db, `videoCodes/${code}`), { usedDevices: [...usedDevices, CURRENT_UID] });
+      }
+      await set(ref(db, `videoAccess/${CURRENT_UID}_${lessonId}`), {
+        lessonId, code, grantedAt: Date.now(), expiresAt: codeData.expiresAt || null
+      });
+      toast('تم تفعيل الوصول ✅', 'ok');
+      modal.remove();
+      renderLessonsTab();
+    } catch(e){
+      modal.querySelector('#codeErr').textContent = 'خطأ: ' + e.message;
+      btn.disabled = false; btn.textContent = '✅ تفعيل';
+    }
+  };
+}
+
+/* ========== Video Player with Watch Tracking ========== */
+function playLesson(lessonId){
+  const lesson = allLessons[lessonId];
+  if(!lesson) return;
+  if(!checkVideoAccess(lessonId).allowed){ toast('غير مسموح', 'err'); return; }
+
+  const yt = lesson.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)/);
+  const ytId = yt ? yt[1] : null;
+
+  $app.innerHTML = `
+    <div class="topbar"><button class="icon-btn" id="back">←</button><h1>${esc(lesson.title)}</h1></div>
+    <div class="page">
+      <div style="position:relative;aspect-ratio:16/9;background:#000;margin:16px;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.4)">
+        ${ytId
+          ? `<iframe id="ytFrame" src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+               allowfullscreen allow="autoplay; encrypted-media"
+               style="width:100%;height:100%;border:none;display:block"></iframe>`
+          : `<video id="directVideo" src="${esc(lesson.videoUrl)}" controls autoplay playsinline style="width:100%;height:100%;display:block;background:#000"></video>`}
+      </div>
+      <div style="padding:16px">
+        <h2 style="font-size:18px;font-weight:800;margin-bottom:8px">${esc(lesson.title)}</h2>
+        <p style="color:var(--primary-dark);font-size:12px;font-weight:700;margin-bottom:8px">📌 ${esc(lesson.order || '')}</p>
+        <p style="color:var(--muted);font-size:14px;line-height:1.7;white-space:pre-wrap">${esc(lesson.description || '')}</p>
+        ${Object.values(allExams).some(e => e.lessonId === lesson.id)
+          ? `<button class="btn btn-primary" id="examBtn" style="margin-top:20px">📝 حل الامتحان</button>` : ''}
+      </div>
+    </div>`;
+
+  document.getElementById('back').onclick = () => { stopVideoTimer(); goBack(); };
+  document.getElementById('examBtn')?.addEventListener('click', () => {
+    pushNav({ screen: 'exam', lessonId: lesson.id }); openExam(lesson.id);
+  });
+
+  startWatchTracking(lessonId, lesson.durationMinutes || 5);
+}
+
+function startWatchTracking(lessonId, durationMin){
+  stopVideoTimer();
+  const totalSec = durationMin * 60;
+  currentVideoStartTime = Date.now();
+  currentVideoTimer = setInterval(async () => {
+    if(!CURRENT_UID) return;
+    const elapsed = Math.floor((Date.now() - currentVideoStartTime) / 1000);
+    const percent = Math.min(100, Math.round((elapsed / totalSec) * 100));
+    try {
+      await set(ref(db, `watchProgress/${CURRENT_UID}/${lessonId}`), {
+        percent, elapsed, totalSec, updatedAt: Date.now()
+      });
+    } catch(e){}
+  }, 10000);
+  setTimeout(() => { stopVideoTimer(); }, totalSec * 1000 + 5000);
+}
+
+function stopVideoTimer(){
+  if(currentVideoTimer){ clearInterval(currentVideoTimer); currentVideoTimer = null; }
+}
+
+/* ========== Exam Engine (Dynamic) ========== */
+function openExam(lessonId){
+  const examList = Object.values(allExams).filter(e => e.lessonId === lessonId);
+  if(examList.length === 0){ toast('لا يوجد امتحان', 'err'); return; }
+  let currentQuestion = 0;
+  const answers = {};
+  const shuffled = [...examList].sort(() => Math.random() - 0.5);
+
+  const drawExam = () => {
+    const q = shuffled[currentQuestion];
+    let optionsHTML = '';
+    if(q.type === 'mcq'){
+      optionsHTML = q.options.map((opt, i) => `
+        <div class="exam-option ${answers[currentQuestion]===i?'selected':''}" data-opt="${i}">
+          <div class="letter">${String.fromCharCode(65+i)}</div>
+          <div class="txt">${esc(opt)}</div>
+        </div>`).join('');
+    } else if(q.type === 'truefalse'){
+      optionsHTML = ['صح','غلط'].map((opt, i) => `
+        <div class="exam-option ${answers[currentQuestion]===i?'selected':''}" data-opt="${i}">
+          <div class="letter">${i===0?'✓':'✗'}</div>
+          <div class="txt">${opt}</div>
+        </div>`).join('');
+    }
+
+    $app.innerHTML = `
+      <div class="topbar"><button class="icon-btn" id="back">←</button><h1>📝 امتحان</h1><span style="font-size:12px;color:var(--muted)">${currentQuestion+1}/${shuffled.length}</span></div>
+      <div class="page" style="padding:16px">
+        <div style="background:#fff;padding:20px;border-radius:14px;border:1px solid var(--border);margin-bottom:16px">
+          <div style="font-size:13px;color:var(--primary-dark);font-weight:700;margin-bottom:8px">
+            ${q.type==='mcq'?'اختيار من متعدد':'صح وغلط'}
+          </div>
+          <div style="font-size:16px;font-weight:700;line-height:1.6">${esc(q.question)}</div>
+        </div>
+        <div>${optionsHTML}</div>
+        <div style="margin-top:20px;display:flex;gap:10px">
+          ${currentQuestion > 0 ? `<button class="btn btn-ghost" id="prevBtn" style="flex:1">⬅️ السابق</button>` : ''}
+          ${currentQuestion < shuffled.length-1
+            ? `<button class="btn" id="nextBtn" style="flex:1">التالي ➡️</button>`
+            : `<button class="btn btn-success" id="finishBtn" style="flex:1">🏁 إنهاء</button>`}
+        </div>
+      </div>`;
+    document.getElementById('back').onclick = goBack;
+    document.querySelectorAll('.exam-option').forEach(el => {
+      el.onclick = () => { answers[currentQuestion] = parseInt(el.dataset.opt); drawExam(); };
+    });
+    document.getElementById('prevBtn')?.addEventListener('click', () => { currentQuestion--; drawExam(); });
+    document.getElementById('nextBtn')?.addEventListener('click', () => { currentQuestion++; drawExam(); });
+    document.getElementById('finishBtn')?.addEventListener('click', () => submitExam());
+  };
+
+  const submitExam = async () => {
+    let correct = 0;
+    shuffled.forEach((q, i) => { if(answers[i] === q.correct) correct++; });
+    const total = shuffled.length;
+    const percent = Math.round((correct/total) * 100);
+    const passed = percent >= 50;
+    try {
+      await push(ref(db, 'results'), {
+        studentId: CURRENT_UID, studentName: CURRENT_USER.name, studentGrade: CURRENT_USER.grade,
+        lessonId, lessonTitle: allLessons[lessonId]?.title || '',
+        correct, total, percent, passed, createdAt: Date.now()
+      });
+    } catch(e){ console.error(e); }
+    $app.innerHTML = `
+      <div class="topbar"><button class="icon-btn" id="back">←</button><h1>🏁 نتيجة</h1></div>
+      <div class="page" style="padding:24px;text-align:center">
+        <div style="font-size:80px;margin-bottom:16px">${passed?'🎉':'😔'}</div>
+        <h2 style="font-size:24px;font-weight:900;margin-bottom:8px;color:${passed?'var(--success)':'var(--danger)'}">${passed?'مبروك نجحت!':'للأسف رسبت'}</h2>
+        <p style="color:var(--muted);margin-bottom:20px">درجتك: <b>${correct}/${total}</b> (${percent}%)</p>
+        <button class="btn" id="backBtn">العودة للدروس</button>
+      </div>`;
+    document.getElementById('back').onclick = goBack;
+    document.getElementById('backBtn').onclick = () => { navStack = [{ screen: 'home', tab: 'lessons' }]; currentTab = 'lessons'; renderHome(); };
+  };
+  drawExam();
+}
+
+/* ========== Library ========== */
+function renderLibraryTab(){
+  const page = document.getElementById('mainPage');
+  if(!page) return;
+  const books = Object.values(allBooks).filter(b => b.grade === CURRENT_USER?.grade);
+  page.innerHTML = `
+    <div class="section-title">كتب وملازم ${esc(gradeLabel(CURRENT_USER?.grade))}</div>
+    ${books.length === 0 ? `<div class="empty"><div class="big">📚</div><div class="title">لا توجد كتب بعد</div></div>`
+      : books.map(b => `
+        <div class="list-item">
+          <div class="ic">📕</div>
+          <div class="info">
+            <div class="title">${esc(b.title)}</div>
+            <div class="meta">${esc(b.description || '')}</div>
+          </div>
+          <a href="${esc(b.url)}" target="_blank" class="btn btn-sm" style="width:auto">⬇️</a>
+        </div>`).join('')}`;
+}
+
+/* ========== Chat ========== */
+function renderChatTab(){
+  const page = document.getElementById('mainPage');
+  if(!page) return;
+  const active = chatSessions.find(s => s.id === activeChatId) || null;
+  const messages = active?.messages || [];
+  page.innerHTML = `
+    <div class="chat-container">
+      <div style="display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fff">
+        <button class="btn btn-sm" id="newChatBtn" style="flex:1">➕ محادثة جديدة</button>
+        <button class="btn btn-sm btn-ghost" id="listChatsBtn" style="flex:1">📂 المحادثات (${chatSessions.length})</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-wrap">
+        <textarea class="chat-input" id="chatInput" rows="1" placeholder="اكتب سؤالك هنا..."></textarea>
+        <button class="chat-send" id="chatSend">➤</button>
+      </div>
+    </div>`;
+  const msgs = document.getElementById('chatMessages');
+  const inp = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const renderMsgs = () => {
+    msgs.innerHTML = messages.length === 0
+      ? `<div class="msg ai">أهلاً! أنا مساعدك الدراسي. اسألني أي حاجة.</div>`
+      : messages.map(m => `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}">${esc(m.content)}</div>`).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  };
+  renderMsgs();
+  document.getElementById('newChatBtn').onclick = () => {
+    const id = 'c_' + Date.now();
+    chatSessions.unshift({ id, title: 'محادثة ' + new Date().toLocaleString('ar-EG'), messages: [], createdAt: Date.now() });
+    activeChatId = id; saveChatSession(chatSessions[0]); renderChatTab();
+  };
+  document.getElementById('listChatsBtn').onclick = () => {
+    if(chatSessions.length === 0){ toast('لا توجد محادثات', 'err'); return; }
+    const modal = document.createElement('div');
+    modal.className = 'modal-bg';
+    modal.innerHTML = `<div class="modal-body">
+      <h3 style="margin-bottom:16px">📂 المحادثات</h3>
+      ${chatSessions.map(s => `
+        <div class="list-item" style="margin:0 0 8px">
+          <div class="ic">💬</div>
+          <div class="info" data-open="${s.id}" style="cursor:pointer">
+            <div class="title">${esc(s.title)}</div>
+            <div class="meta">${s.messages.length} رسالة</div>
+          </div>
+          <button class="btn btn-sm btn-danger" data-delchat="${s.id}">🗑️</button>
+        </div>`).join('')}
+      <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+    </div>`;
+    document.body.appendChild(modal);
+    modal.querySelector('#closeModal').onclick = () => modal.remove();
+    modal.querySelectorAll('[data-open]').forEach(el => {
+      el.onclick = () => { activeChatId = el.dataset.open; modal.remove(); renderChatTab(); };
+    });
+    modal.querySelectorAll('[data-delchat]').forEach(b => {
+      b.onclick = async (e) => {
+        e.stopPropagation();
+        if(!confirm('حذف؟')) return;
+        await deleteChatSession(b.dataset.delchat);
+        chatSessions = chatSessions.filter(s => s.id !== b.dataset.delchat);
+        if(activeChatId === b.dataset.delchat) activeChatId = chatSessions[0]?.id || null;
+        modal.remove(); renderChatTab();
+      };
+    });
+  };
+  const send = async () => {
+    const text = inp.value.trim(); if(!text) return;
+    if(!activeChatId){
+      const id = 'c_' + Date.now();
+      chatSessions.unshift({ id, title: text.slice(0,30), messages: [], createdAt: Date.now() });
+      activeChatId = id;
+    }
+    inp.value = ''; inp.style.height = 'auto';
+    const active = chatSessions.find(s => s.id === activeChatId);
+    active.messages.push({ role:'user', content: text });
+    if(active.messages.length === 1) active.title = text.slice(0,30);
+    renderMsgs(); saveChatSession(active);
+    sendBtn.disabled = true;
+    try {
+      const reply = await askAI(text);
+      active.messages.push({ role:'assistant', content: reply });
+      renderMsgs(); saveChatSession(active);
+    } catch(e){
+      active.messages.push({ role:'assistant', content: '❌ خطأ' });
+      renderMsgs(); saveChatSession(active);
+    }
+    sendBtn.disabled = false;
+  };
+  sendBtn.onclick = send;
+  inp.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); } };
+}
+
+function renderMyResults(){
+  const myResults = Object.values(allResults).filter(r => r.studentId === CURRENT_UID).sort((a,b) => b.createdAt - a.createdAt);
+  $app.innerHTML = `
+    <div class="topbar"><button class="icon-btn" id="back">←</button><h1>🏆 نتايجي</h1></div>
+    <div class="page" style="padding:16px">
+      ${myResults.length === 0 ? `<div class="empty"><div class="big">🏆</div><div class="title">لا توجد نتايج</div></div>`
+        : myResults.map(r => `
+          <div class="list-item">
+            <div class="ic">${r.passed ? '✅' : '❌'}</div>
+            <div class="info">
+              <div class="title">${esc(r.lessonTitle)}</div>
+              <div class="meta">${r.correct}/${r.total} • ${r.percent}%</div>
+            </div>
+          </div>`).join('')}
+    </div>`;
+  document.getElementById('back').onclick = goBack;
+}
+
+/* ========== Admin Panel ========== */
+function renderAdminTab(){
+  const page = document.getElementById('mainPage');
+  if(!page) return;
+  if(!IS_ADMIN){ page.innerHTML = `<div class="empty"><div class="big">🚫</div><div class="title">ممنوع</div></div>`; return; }
+  const lessonsInGrade = Object.values(allLessons).filter(l => l.grade === adminGradeFilter);
+  const booksInGrade = Object.values(allBooks).filter(b => b.grade === adminGradeFilter);
+  const codesCount = Object.keys(allCodes).length;
+  const videoCodesCount = Object.keys(allVideoAccess).length;
+
+  page.innerHTML = `
+    <div class="admin-grade-tabs">
+      ${GRADES.map(g => `<div class="admin-grade-tab ${adminGradeFilter === g.id ? 'active' : ''}" data-grade="${g.id}">${g.short}</div>`).join('')}
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num">${lessonsInGrade.length}</div><div class="lbl">🎥 دروس</div></div>
+      <div class="stat-card"><div class="num">${booksInGrade.length}</div><div class="lbl">📚 كتب</div></div>
+      <div class="stat-card"><div class="num">${codesCount}</div><div class="lbl">🔑 أكواد سنتر</div></div>
+      <div class="stat-card"><div class="num">${videoCodesCount}</div><div class="lbl">💰 أكواد فيديو</div></div>
+    </div>
+    <div class="section-title">إدارة المحتوى</div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn" id="addLessonBtn">➕ إضافة درس</button>
+      <button class="btn btn-primary" id="addExamBtn">➕ إضافة امتحان</button>
+      <button class="btn btn-ghost" id="addBookBtn">📚 إضافة كتاب</button>
+    </div>
+    <div class="section-title">الأكواد</div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-success" id="genCenterCodeBtn">🏫 توليد كود سنتر</button>
+      <button class="btn" id="genVideoCodeBtn" style="background:var(--warning)">💰 توليد كود فيديو</button>
+      <button class="btn btn-ghost" id="listCodesBtn">📋 قائمة الأكواد</button>
+    </div>
+    <div class="section-title">قائمة الدروس (${lessonsInGrade.length})</div>
+    ${lessonsInGrade.length === 0 ? `<div class="empty"><div class="big">📋</div><div class="title">لا توجد دروس</div></div>`
+      : lessonsInGrade.map(l => `
+        <div class="list-item">
+          <div class="ic">🎥</div>
+          <div class="info">
+            <div class="title">${esc(l.title)} ${l.isPaid ? '💰' : ''}</div>
+            <div class="meta">${esc(l.order||'')}</div>
+          </div>
+          <button class="btn btn-sm btn-danger" data-del-lesson="${l.id}">🗑️</button>
+        </div>`).join('')}
+    <div class="section-title">إدارة عامة</div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-ghost" id="viewUsersBtn">👥 المستخدمين</button>
+      <button class="btn btn-ghost" id="viewResultsBtn">🏆 نتايج الطلاب</button>
+      <button class="btn btn-success" id="trainAIBtn">🧠 تدريب المساعد</button>
+      <button class="btn btn-ghost" id="aiSettingsBtn">🔑 إعدادات API</button>
+    </div>
+  `;
+
+  page.querySelectorAll('.admin-grade-tab').forEach(t => {
+    t.onclick = () => { adminGradeFilter = t.dataset.grade; renderAdminTab(); };
+  });
+  document.getElementById('addLessonBtn').onclick = () => openAddLessonModal(adminGradeFilter);
+  document.getElementById('addExamBtn').onclick = () => openAddExamModal(adminGradeFilter);
+  document.getElementById('addBookBtn').onclick = () => openAddBookModal(adminGradeFilter);
+  document.getElementById('genCenterCodeBtn').onclick = () => openGenCenterCodeModal();
+  document.getElementById('genVideoCodeBtn').onclick = () => openGenVideoCodeModal();
+  document.getElementById('listCodesBtn').onclick = openListCodesModal;
+  document.getElementById('viewUsersBtn').onclick = openUsersModal;
+  document.getElementById('viewResultsBtn').onclick = openAllResultsModal;
+  document.getElementById('trainAIBtn').onclick = () => { pushNav({ screen: 'trainAI' }); renderTrainAI(); };
+  document.getElementById('aiSettingsBtn').onclick = openAISettingsModal;
+
+  page.querySelectorAll('[data-del-lesson]').forEach(b => {
+    b.onclick = async () => {
+      if(!confirm('حذف الدرس وكل امتحاناته؟')) return;
+      const lessonId = b.dataset.delLesson;
+      for(const ex of Object.values(allExams).filter(e => e.lessonId === lessonId)) await remove(ref(db, `exams/${ex.id}`));
+      await remove(ref(db, `lessons/${lessonId}`));
+      toast('تم الحذف', 'ok');
+    };
+  });
+}
+
+/* ========== Center Code Generator ========== */
+function openGenCenterCodeModal(){
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">🏫 توليد كود طالب سنتر</h3>
+    <div class="field"><label>اسم الطالب</label><input id="cName"></div>
+    <div class="field"><label>رقم الهاتف</label><input id="cPhone" type="tel"></div>
+    <div class="field"><label>الصف</label><select id="cGrade">${GRADES.map(g => `<option value="${g.id}">${g.label}</option>`).join('')}</select></div>
+    <div class="field"><label>تاريخ الانتهاء (اختياري)</label><input id="cExpiry" type="date"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="cCancel">إلغاء</button>
+      <button class="btn btn-success" id="cGen">✅ توليد</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#cCancel').onclick = () => modal.remove();
+  modal.querySelector('#cGen').onclick = async () => {
+    const studentName = modal.querySelector('#cName').value.trim();
+    const phone = modal.querySelector('#cPhone').value.trim();
+    const grade = modal.querySelector('#cGrade').value;
+    const expiryStr = modal.querySelector('#cExpiry').value;
+    if(!studentName || !phone){ toast('املأ الاسم والهاتف', 'err'); return; }
+    const code = uid8();
+    const expiresAt = expiryStr ? new Date(expiryStr).getTime() : null;
+    try {
+      await set(ref(db, `codes/${code}`), {
+        code, studentName, phone, grade, classNumber: null, expiresAt, createdAt: Date.now()
+      });
+      modal.remove();
+      showCodeWithQR(code, phone, studentName);
+    } catch(e){ toast('فشل: ' + e.message, 'err'); }
+  };
+}
+
+function showCodeWithQR(code, phone, name){
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">✅ تم التوليد</h3>
+    <p style="font-size:13px;text-align:center;margin-bottom:10px">الطالب: <b>${esc(name)}</b></p>
+    <div class="code-box">${esc(code)}</div>
+    <div class="qr-container" id="qrBox"></div>
+    <p style="font-size:11px;color:var(--muted);text-align:center">الكود والـ QR صالحان للدخول</p>
+    <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+  </div>`;
+  document.body.appendChild(modal);
+  const qrText = `${code}|${phone}`;
+  QRCode.toCanvas(qrText, { width: 220, margin: 1 }, (err, canvas) => {
+    if(!err) modal.querySelector('#qrBox').appendChild(canvas);
+  });
+  modal.querySelector('#closeModal').onclick = () => modal.remove();
+}
+
+/* ========== Video Code Generator ========== */
+function openGenVideoCodeModal(){
+  const lessons = Object.values(allLessons);
+  if(lessons.length === 0){ toast('أضف درس أولاً', 'err'); return; }
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">💰 توليد كود فيديو مدفوع</h3>
+    <div class="field"><label>الفيديو</label>
+      <select id="vLesson">${lessons.map(l => `<option value="${l.id}">${esc(l.title)}</option>`).join('')}</select>
+    </div>
+    <div class="field"><label>عدد الأجهزة المسموح</label><input id="vDevices" type="number" min="1" value="1"></div>
+    <div class="field"><label>تاريخ الانتهاء (اختياري)</label><input id="vExpiry" type="date"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="vCancel">إلغاء</button>
+      <button class="btn" id="vGen" style="background:var(--warning)">✅ توليد</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#vCancel').onclick = () => modal.remove();
+  modal.querySelector('#vGen').onclick = async () => {
+    const lessonId = modal.querySelector('#vLesson').value;
+    const maxDevices = parseInt(modal.querySelector('#vDevices').value) || 1;
+    const expiryStr = modal.querySelector('#vExpiry').value;
+    const code = 'V' + uid8();
+    const expiresAt = expiryStr ? new Date(expiryStr).getTime() : null;
+    try {
+      await set(ref(db, `videoCodes/${code}`), {
+        code, lessonId, maxDevices, usedDevices: [], expiresAt, createdAt: Date.now()
+      });
+      modal.remove();
+      const m2 = document.createElement('div');
+      m2.className = 'modal-bg';
+      m2.innerHTML = `<div class="modal-body">
+        <h3 style="margin-bottom:16px">✅ تم توليد كود الفيديو</h3>
+        <div class="code-box">${esc(code)}</div>
+        <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px">${esc(allLessons[lessonId]?.title)}</p>
+        <p style="font-size:12px;color:var(--muted);text-align:center">${maxDevices} أجهزة ${expiresAt?'• ينتهي: '+new Date(expiresAt).toLocaleDateString('ar-EG'):''}</p>
+        <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+      </div>`;
+      document.body.appendChild(m2);
+      m2.querySelector('#closeModal').onclick = () => m2.remove();
+    } catch(e){ toast('فشل: ' + e.message, 'err'); }
+  };
+}
+
+async function openListCodesModal(){
+  const centerCodes = Object.values(allCodes);
+  const snapV = await get(ref(db, 'videoCodes'));
+  const videoCodes = Object.values(snapV.val() || {});
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">📋 الأكواد</h3>
+    <h4 style="margin:12px 0;font-size:14px">🏫 أكواد السنتر (${centerCodes.length})</h4>
+    ${centerCodes.length === 0 ? '<p style="color:var(--muted);font-size:12px">لا توجد</p>'
+      : centerCodes.map(c => `
+        <div style="padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;font-size:12px">
+          <div style="font-weight:800">${esc(c.code)} — ${esc(c.studentName)}</div>
+          <div style="color:var(--muted)">${esc(c.phone)} • ${esc(gradeShort(c.grade))} ${c.expiresAt?'• ينتهي: '+new Date(c.expiresAt).toLocaleDateString('ar-EG'):''}</div>
+        </div>`).join('')}
+    <h4 style="margin:12px 0;font-size:14px">💰 أكواد الفيديو (${videoCodes.length})</h4>
+    ${videoCodes.length === 0 ? '<p style="color:var(--muted);font-size:12px">لا توجد</p>'
+      : videoCodes.map(c => `
+        <div style="padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;font-size:12px">
+          <div style="font-weight:800">${esc(c.code)}</div>
+          <div style="color:var(--muted)">${esc(allLessons[c.lessonId]?.title || '')} • ${(c.usedDevices||[]).length}/${c.maxDevices} أجهزة</div>
+        </div>`).join('')}
+    <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#closeModal').onclick = () => modal.remove();
+}
+
+/* ========== Add Lesson / Exam / Book Modals ========== */
+function openAddLessonModal(gradeId){
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">➕ إضافة درس</h3>
+    <div class="field"><label>العنوان</label><input id="lTitle"></div>
+    <div class="field"><label>الوصف</label><textarea id="lDesc" rows="2"></textarea></div>
+    <div class="field"><label>رابط الفيديو</label><input id="lVideo" placeholder="https://youtube.com/watch?v=..."></div>
+    <div class="field"><label>الترتيب</label><input id="lOrder" placeholder="الوحدة 1 - الدرس 1"></div>
+    <div class="field"><label>المدة التقريبية (دقائق)</label><input id="lDur" type="number" value="10"></div>
+    <div class="field"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="lPaid" style="width:auto"> فيديو مدفوع 💰</label></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="cCancel">إلغاء</button>
+      <button class="btn" id="cSave">حفظ</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#cCancel').onclick = () => modal.remove();
+  modal.querySelector('#cSave').onclick = async () => {
+    const title = modal.querySelector('#lTitle').value.trim();
+    const videoUrl = modal.querySelector('#lVideo').value.trim();
+    if(!title || !videoUrl){ toast('املأ الحقول المطلوبة', 'err'); return; }
+    const id = push(ref(db, 'lessons')).key;
+    await set(ref(db, `lessons/${id}`), {
+      id, grade: gradeId, title, description: modal.querySelector('#lDesc').value.trim(),
+      videoUrl, order: modal.querySelector('#lOrder').value.trim(),
+      durationMinutes: parseInt(modal.querySelector('#lDur').value) || 10,
+      isPaid: modal.querySelector('#lPaid').checked, createdAt: Date.now()
+    });
+    toast('تمت الإضافة', 'ok'); modal.remove();
+  };
+}
+
+function openAddExamModal(gradeId){
+  const lessons = Object.values(allLessons).filter(l => l.grade === gradeId);
+  if(lessons.length === 0){ toast('أضف درس أولاً', 'err'); return; }
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">➕ إضافة سؤال</h3>
+    <div class="field"><label>الدرس</label><select id="eLesson">${lessons.map(l => `<option value="${l.id}">${esc(l.title)}</option>`).join('')}</select></div>
+    <div class="field"><label>النوع</label><select id="eType"><option value="mcq">اختيار</option><option value="truefalse">صح/غلط</option></select></div>
+    <div class="field"><label>السؤال</label><textarea id="eQ" rows="2"></textarea></div>
+    <div id="mcqF">
+      <div class="field"><label>خيار 1</label><input id="o1"></div>
+      <div class="field"><label>خيار 2</label><input id="o2"></div>
+      <div class="field"><label>خيار 3</label><input id="o3"></div>
+      <div class="field"><label>خيار 4</label><input id="o4"></div>
+      <div class="field"><label>الصحيح (1-4)</label><input id="cor" type="number" min="1" max="4" value="1"></div>
+    </div>
+    <div id="tfF" class="hidden">
+      <div class="field"><label>الصحيح</label><select id="tfCor"><option value="0">صح</option><option value="1">غلط</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="cCancel">إلغاء</button>
+      <button class="btn" id="cSave">حفظ</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#eType').onchange = (e) => {
+    const t = e.target.value;
+    modal.querySelector('#mcqF').classList.toggle('hidden', t !== 'mcq');
+    modal.querySelector('#tfF').classList.toggle('hidden', t !== 'truefalse');
+  };
+  modal.querySelector('#cCancel').onclick = () => modal.remove();
+  modal.querySelector('#cSave').onclick = async () => {
+    const lessonId = modal.querySelector('#eLesson').value;
+    const type = modal.querySelector('#eType').value;
+    const question = modal.querySelector('#eQ').value.trim();
+    if(!question){ toast('اكتب السؤال', 'err'); return; }
+    const data = { id: push(ref(db, 'exams')).key, lessonId, type, question, createdAt: Date.now() };
+    if(type === 'mcq'){
+      data.options = [1,2,3,4].map(i => modal.querySelector(`#o${i}`).value.trim());
+      data.correct = parseInt(modal.querySelector('#cor').value) - 1;
+      if(data.options.some(o => !o)){ toast('املأ الخيارات', 'err'); return; }
+    } else {
+      data.correct = parseInt(modal.querySelector('#tfCor').value);
+    }
+    await set(ref(db, `exams/${data.id}`), data);
+    toast('تمت الإضافة', 'ok'); modal.remove();
+  };
+}
+
+function openAddBookModal(gradeId){
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">📚 إضافة كتاب</h3>
+    <div class="field"><label>العنوان</label><input id="bTitle"></div>
+    <div class="field"><label>الوصف</label><textarea id="bDesc" rows="2"></textarea></div>
+    <div class="field"><label>الرابط</label><input id="bUrl"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="cCancel">إلغاء</button>
+      <button class="btn" id="cSave">حفظ</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#cCancel').onclick = () => modal.remove();
+  modal.querySelector('#cSave').onclick = async () => {
+    const title = modal.querySelector('#bTitle').value.trim();
+    const url = modal.querySelector('#bUrl').value.trim();
+    if(!title || !url){ toast('املأ الحقول', 'err'); return; }
+    const id = push(ref(db, 'books')).key;
+    await set(ref(db, `books/${id}`), { id, grade: gradeId, title, description: modal.querySelector('#bDesc').value.trim(), url, createdAt: Date.now() });
+    toast('تمت الإضافة', 'ok'); modal.remove();
+  };
+}
+
+/* ========== Train AI ========== */
+function renderTrainAI(){
+  if(!IS_ADMIN){ toast('ممنوع', 'err'); return renderHome(); }
+  const kbEntries = Object.entries(allKnowledge).filter(([id, k]) => k.grade === adminKbGradeFilter);
+  $app.innerHTML = `
+    <div class="topbar"><button class="icon-btn" id="back">←</button><h1>🧠 تدريب المساعد</h1></div>
+    <div class="page" style="padding:16px">
+      <div class="admin-grade-tabs" style="padding:0 0 16px">
+        ${GRADES.map(g => `<div class="admin-grade-tab ${adminKbGradeFilter === g.id ? 'active' : ''}" data-kb-grade="${g.id}">${g.short}</div>`).join('')}
+      </div>
+      <div style="background:#fff;padding:16px;border-radius:14px;border:1px solid var(--border);margin-bottom:16px">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:8px">📤 رفع ملف TXT</h3>
+        <input type="file" id="kbFile" accept=".txt" style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;font-size:13px">
+        <div id="kbFileInfo" style="font-size:12px;color:var(--primary-dark);margin-bottom:10px;display:none"></div>
+        <div class="field"><label>أو الصق المحتوى</label><textarea id="kbText" rows="4"></textarea></div>
+        <div class="field"><label>العنوان</label><input id="kbTitle"></div>
+        <button class="btn" id="uploadKbBtn">💾 حفظ وتحليل</button>
+      </div>
+      <div class="section-title" style="padding:0 0 10px">🧠 المعرفة (${kbEntries.length})</div>
+      ${kbEntries.map(([id, e]) => `
+        <div class="kb-item">
+          <div class="kb-q">${e.type === 'qa' ? '❓ ' + esc(e.question) : '📄 ' + esc(e.title || '')}</div>
+          <div class="kb-a">${esc((e.type === 'qa' ? e.answer : e.content || '').slice(0, 150))}...</div>
+          <button class="kb-del" data-del="${id}">🗑️</button>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('back').onclick = goBack;
+  document.querySelectorAll('[data-kb-grade]').forEach(t => {
+    t.onclick = () => { adminKbGradeFilter = t.dataset.kbGrade; renderTrainAI(); };
+  });
+  document.getElementById('kbFile').onchange = async (e) => {
+    const file = e.target.files[0]; const info = document.getElementById('kbFileInfo');
+    if(!file){ info.style.display = 'none'; return; }
+    if(!file.name.toLowerCase().endsWith('.txt')){ toast('لازم .txt', 'err'); e.target.value = ''; return; }
+    const text = await file.text();
+    info.style.display = 'block';
+    info.textContent = `📄 ${file.name} — ${(text.length/1000).toFixed(1)} ألف حرف`;
+  };
+  document.getElementById('uploadKbBtn').onclick = async () => {
+    const file = document.getElementById('kbFile').files[0];
+    const pasted = document.getElementById('kbText').value.trim();
+    const title = document.getElementById('kbTitle').value.trim() || 'منهج';
+    const content = file ? await file.text() : pasted;
+    if(!content){ toast('ارفع أو الصق', 'err'); return; }
+    const btn = document.getElementById('uploadKbBtn'); btn.disabled = true;
+    try {
+      const chunks = splitIntoChunks(content, 3000);
+      for(let i = 0; i < chunks.length; i++){
+        const id = push(ref(db, 'knowledge')).key;
+        await set(ref(db, `knowledge/${id}`), {
+          type: 'file', grade: adminKbGradeFilter, title: `${title} (${i+1}/${chunks.length})`,
+          sourceTitle: title, content: chunks[i], createdAt: Date.now()
+        });
+      }
+      toast(`تم رفع ${chunks.length} جزء`, 'ok');
+      document.getElementById('kbFile').value = ''; document.getElementById('kbText').value = ''; document.getElementById('kbTitle').value = '';
+      document.getElementById('kbFileInfo').style.display = 'none';
+    } catch(e){ toast('فشل', 'err'); }
+    btn.disabled = false;
+  };
+  document.querySelectorAll('[data-del]').forEach(b => {
+    b.onclick = async () => { if(!confirm('حذف؟')) return; await remove(ref(db, `knowledge/${b.dataset.del}`)); toast('تم', 'ok'); };
+  });
+}
+
+/* ========== AI Settings ========== */
+async function openAISettingsModal(){
+  const snap = await get(ref(db, 'settings/ai'));
+  const cur = snap.val() || {};
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">🔑 إعدادات المساعد</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Groq API: ${esc(AI_API_URL)}<br>الموديل: ${esc(AI_DEFAULT_MODEL)}</p>
+    <div class="field"><label>API Key</label><input id="aiKey" value="${esc(cur.apiKey||'')}" placeholder="gsk_..."></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-ghost" id="cCancel">إلغاء</button>
+      <button class="btn" id="cSave">حفظ</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#cCancel').onclick = () => modal.remove();
+  modal.querySelector('#cSave').onclick = async () => {
+    await set(ref(db, 'settings/ai'), { apiKey: modal.querySelector('#aiKey').value.trim(), model: AI_DEFAULT_MODEL, updatedAt: Date.now() });
+    toast('تم', 'ok'); modal.remove();
+  };
+}
+
+/* ========== Users & Results ========== */
+async function openUsersModal(){
+  const snap = await get(ref(db, 'users'));
+  const arr = Object.values(snap.val() || {}).sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">👥 المستخدمين (${arr.length})</h3>
+    <div style="max-height:60vh;overflow-y:auto">
+      ${arr.map(u => `
+        <div class="user-item" style="margin:0 0 10px">
+          <div class="user-avatar">${initials(u.name)}</div>
+          <div class="user-info">
+            <div class="user-name">${esc(u.name)} ${u.role==='center'?'<span class="badge badge-center">سنتر</span>':''}</div>
+            <div class="user-meta">${esc(u.email)} • ${u.grade?esc(gradeShort(u.grade)):'-'}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#closeModal').onclick = () => modal.remove();
+}
+
+async function openAllResultsModal(){
+  const results = Object.values(allResults).sort((a,b) => b.createdAt - a.createdAt);
+  const modal = document.createElement('div');
+  modal.className = 'modal-bg';
+  modal.innerHTML = `<div class="modal-body">
+    <h3 style="margin-bottom:16px">🏆 النتايج (${results.length})</h3>
+    <div style="max-height:60vh;overflow-y:auto">
+      ${results.length === 0 ? '<p>لا توجد</p>' : results.map(r => `
+        <div style="padding:8px;border-bottom:1px solid var(--border);font-size:12px">
+          <b>${esc(r.studentName)}</b> — ${esc(r.lessonTitle)} • ${r.correct}/${r.total} (${r.percent}%)
+        </div>`).join('')}
+    </div>
+    <button class="btn btn-ghost" style="margin-top:16px" id="closeModal">إغلاق</button>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#closeModal').onclick = () => modal.remove();
+}
+
+if(!CURRENT_UID){
+  try { history.replaceState({ state: { screen: 'login' } }, '', ''); } catch(e){}
+  renderLogin();
+}
+</script>
+</body>
+</html>
